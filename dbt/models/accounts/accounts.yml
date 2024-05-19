@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: accounts
+    database: analytics-take-home-test  
+    schema: monzo_datawarehouse  
+    tables:
+      - name: account_created
