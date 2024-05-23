@@ -1,0 +1,28 @@
+version : 2
+
+models:
+  - name: accounts
+    description: "This table keeps track of changes to customer bank accounts over time. It tracks accounts as they are opened and, if applicable, closed and reopened again.
+                  Latest_record_ind = 1 represents the latest status of an account.
+                  Table fully refreshed daily from backend logs."
+    columns:
+      - name: user_id_hashed
+        description: "Unique identifier of a customer"
+
+      - name: account_id_hashed
+        description: "Unique identifier of an account"
+
+      - name: account_type
+        description: "Type of account e.g. uk_retail"
+
+      - name: event
+        description: "account related event e.g. account_opened"
+
+      - name: effective_from_ts
+        description: "The datetime the event is valid from"
+
+      - name: effective_to_ts
+        description: "The datetime the event is valid to. NULL is a valid record and represents when event is still active"
+
+      - name: latest_record_ind
+        description: "Identifies the most recent record for the account"

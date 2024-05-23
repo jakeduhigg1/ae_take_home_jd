@@ -1,7 +1,4 @@
-{{ config(materialized='view') }}
+select *
 
-select
-
-*
 
 from {{ source('accounts', 'account_created') }}
