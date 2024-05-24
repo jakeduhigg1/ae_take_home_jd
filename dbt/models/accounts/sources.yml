@@ -6,6 +6,25 @@ sources:
     schema: monzo_datawarehouse  
     tables:
       - name: account_created
+        tests:
+          - unique:
+              name: account_created_unique_key_check
+              column_name: "user_id_hashed || '-' || account_id_hashed"
+
+        columns:
+          - name: user_id_hashed
+            tests:
+            - not_null
+          - name: account_id_hashed
+            tests:
+            - not_null
+          - name: created_ts
+            tests:
+            - not_null
+          - name: account_type
+            tests:
+            - not_null
+
       - name: account_closed
       - name: account_reopened
       - name: account_transactions

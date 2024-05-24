@@ -1,0 +1,19 @@
+version : 2
+
+models:
+  - name: 7d_active_users
+    description: "This table contains user_id and date combinations for dates when a customer has at least one open account. 
+                  The table can be used to derive the 7d_active_users metric using the field available in the table.
+                  7d_active_users = sum(has_transaction_last_7days)/sum(has_account_open)."
+    columns:
+      - name: date
+        description: "date on which the user has an account open"
+
+      - name: user_id_hashed
+        description: "Unique identifier of a customer"
+
+      - name: has_account_open
+        description: "Indicator that the user has at least one account open on the given day. Value will always be 1"
+
+      - name: has_transaction_last_7days
+        description: "Indicator whether user has had at least one transaction in the last rolling 7 days across all of their open accounts"
