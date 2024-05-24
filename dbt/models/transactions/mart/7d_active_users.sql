@@ -1,9 +1,13 @@
-{{ 
-  config(
-    materialized='incremental',
-    partition_by={'field': 'date', 'data_type': 'date'},
-    unique_key='date,user_id_hashed'
-  ) 
+{{
+    config(
+        materialized="incremental",
+        incremental_strategy="insert_overwrite",
+        partition_by={
+            "field": "date",
+            "data_type": "date",
+            "granularity": "day",
+        },
+    )
 }}
 
 WITH base AS (
@@ -11,8 +15,10 @@ WITH base AS (
         date,
         user_id_hashed,
         1 AS has_account_open,
-        CASE WHEN transactions_last_7_days > 0 THEN 1 ELSE 0 END AS is_7d_active_user
+        SUM(transactions_last_7_days) AS transactions_last_7_days
     FROM {{ ref('int_daily_account_transactions') }}
+
+    GROUP BY 1,2,3
 )
 
 {% if is_incremental() %}
@@ -22,7 +28,7 @@ SELECT
     date,
     user_id_hashed,
     has_account_open,
-    is_7d_active_user
+    CASE WHEN transactions_last_7_days > 0 THEN 1 ELSE 0 END AS is_7d_active_user 
 FROM base
 WHERE date > (SELECT MAX(date) FROM {{ this }})
 
@@ -33,7 +39,7 @@ SELECT
     date,
     user_id_hashed,
     has_account_open,
-    is_7d_active_user
+    CASE WHEN transactions_last_7_days > 0 THEN 1 ELSE 0 END AS is_7d_active_user 
 FROM base
 
 {% endif %}
